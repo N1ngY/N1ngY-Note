@@ -3,34 +3,34 @@
    深色工业底 + 冷灰面 + 克莱因蓝高亮 + 锐利斜切边
    ============================================================= */
 
-/* ---------- 浅色模式：雾色工业灰（克莱因蓝点缀） ---------- */
+/* ---------- 浅色模式：冷调纸白 + 明快克莱因蓝 ---------- */
 :root,
 [data-md-color-scheme="default"] {
   /* 底与墨 */
-  --ak-bg:            #eef0f2;
-  --ak-raised:        #f7f9fa;
-  --ak-surface:       #e2e5e8;
-  --ak-ink:           #23292d;
-  --ak-ink-soft:      #5c666c;
+  --ak-bg:            #f5f7fb;
+  --ak-raised:        #ffffff;
+  --ak-surface:       #e8edf5;
+  --ak-ink:           #1f2430;
+  --ak-ink-soft:      #5a6474;
 
-  /* 克莱因蓝高亮（IKB 主色） */
-  --ak-amber:         #002fa7;
-  --ak-amber-deep:    #00227a;
+  /* 克莱因蓝高亮（IKB 主色，更亮更纯） */
+  --ak-amber:         #2244ee;
+  --ak-amber-deep:    #1633b8;
 
   /* 冷钢蓝 */
-  --ak-steel:         #4d6a78;
-  --ak-line:          rgba(30, 40, 45, 0.14);
+  --ak-steel:         #5a7a96;
+  --ak-line:          rgba(30, 41, 82, 0.12);
 
   /* Material 变量映射 */
   --md-default-bg-color:        var(--ak-bg);
   --md-default-fg-color:        var(--ak-ink);
   --md-default-fg-color--light: var(--ak-ink-soft);
-  --md-primary-fg-color:        #2a2f33;
-  --md-primary-fg-color--dark:  #1b1f22;
+  --md-primary-fg-color:        #1f2430;
+  --md-primary-fg-color--dark:  #141823;
   --md-accent-fg-color:         var(--ak-amber);
   --md-typeset-a-color:         var(--ak-amber-deep);
-  --md-code-bg-color:           #dfe3e6;
-  --md-code-fg-color:           #2b3136;
+  --md-code-bg-color:           #f0f3f9;
+  --md-code-fg-color:           #1f2430;
 
   /* 字体：中文优先的系统栈 */
   --md-text-font-family:
@@ -41,11 +41,12 @@
     Consolas, "Courier New", monospace;
 
   /* 贡献热力图：克莱因蓝色阶 */
-  --heat-0: #e4e6e9;
-  --heat-1: #c6d2f2;
-  --heat-2: #8fa8e6;
-  --heat-3: #4a6fd6;
-  --heat-4: #002fa7;
+  --heat-0: #e8edf5;
+  --heat-1: #cdd9f8;
+  --heat-2: #9fb6f2;
+  --heat-3: #5f84e8;
+  --heat-4: #2244ee;
+  --heat-5: #12218a;
 
   color-scheme: light;
 }
@@ -78,6 +79,7 @@
   --heat-2: #1f3d8f;
   --heat-3: #2d55c7;
   --heat-4: #4d78ff;
+  --heat-5: #a8c0ff;
 
   color-scheme: dark;
 }
@@ -201,6 +203,13 @@
   letter-spacing: 0.12em;
 }
 
+/* 导航栏 logo：圆形裁剪，适配 n1ngy.jpg 头像 */
+.md-header__button.md-logo img,
+.md-header__button.md-logo svg {
+  border-radius: 50%;
+  object-fit: cover;
+}
+
 /* 导航标签下的克莱因蓝指示条 */
 .md-tabs__link--active,
 .md-tabs__link:hover {
@@ -232,44 +241,99 @@
 }
 
 /* =============================================================
-   贡献热力图
+   贡献热力图（一张连续长表：每天一格）
    ============================================================= */
 .contrib-wrap {
-  overflow-x: auto;
+  overflow: visible;
   padding: 0.4rem 0;
 }
-.contrib-graph {
-  display: inline-flex;
-  gap: 3px;
+
+/* 年份折叠面板：整体居中 */
+.contrib-year {
+  margin: 0 auto 0.8rem auto;
+  max-width: 720px;
+  border: 1px solid var(--ak-line);
+  background: var(--ak-raised);
 }
-.contrib-week {
+.contrib-year__summary {
   display: flex;
-  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0.5rem 0.9rem;
+  font-weight: 700;
+  font-size: 0.82rem;
+  color: var(--ak-amber);
+  cursor: pointer;
+  list-style: none;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.contrib-year__summary::-webkit-details-marker {
+  display: none;
+}
+.contrib-year__summary::before {
+  content: "▸";
+  display: inline-block;
+  margin-right: 0.5rem;
+  color: var(--ak-amber);
+  transition: transform 0.15s ease;
+}
+.contrib-year[open] .contrib-year__summary::before {
+  transform: rotate(90deg);
+}
+.contrib-year__count {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--ak-amber);
+  font-variant-numeric: tabular-nums;
+}
+
+/* 折叠内容区：长表居中 */
+.contrib-year > .contrib-long {
+  margin: 0.4rem auto 0.8rem auto;
+}
+
+/* 长表容器：40 列自适应填满，无横向滚动 */
+.contrib-long {
+  display: grid;
+  grid-template-columns: repeat(40, 1fr);
   gap: 3px;
 }
+
+/* 每日格子：正方形，宽度随容器自适应 */
 .contrib-day {
-  width: 11px;
-  height: 11px;
+  box-sizing: border-box;
+  aspect-ratio: 1;
+  width: 100%;
+  min-width: 6px;
+  border: 1px solid transparent;
   border-radius: 2px;
   background: var(--heat-0);
+  padding: 0;
+  cursor: pointer;
+  position: relative;
+  will-change: transform;
+  transition: background 0.1s ease;
+}
+.contrib-day:hover {
+  border-color: var(--ak-amber);
 }
 .contrib-day[data-level="1"] { background: var(--heat-1); }
 .contrib-day[data-level="2"] { background: var(--heat-2); }
 .contrib-day[data-level="3"] { background: var(--heat-3); }
 .contrib-day[data-level="4"] { background: var(--heat-4); }
-.contrib-day[data-future]   { visibility: hidden; }
+.contrib-day[data-level="5"] { background: var(--heat-5); }
+.contrib-day[data-level="0"] {
+  cursor: pointer;
+}
 
-.contrib-months {
-  display: flex;
-  font-size: 0.6rem;
+
+.contrib-empty {
   color: var(--ak-ink-soft);
-  margin-bottom: 4px;
-}
-.contrib-months span {
-  flex: none;
-  white-space: nowrap;
+  font-size: 0.8rem;
 }
 
+/* 统计 */
 .contrib-stats {
   display: flex;
   flex-wrap: wrap;
@@ -288,15 +352,50 @@
   letter-spacing: 0.05em;
 }
 
+/* 图例 */
 .contrib-legend {
   display: flex;
   align-items: center;
-  gap: 3px;
+  gap: 4px;
   font-size: 0.6rem;
   color: var(--ak-ink-soft);
   margin-top: 6px;
 }
-.contrib-legend .contrib-day { cursor: default; }
+.contrib-legend__item {
+  box-sizing: border-box;
+  width: 14px;
+  height: 14px;
+  border: 1px solid transparent;
+  border-radius: 2px;
+  padding: 0;
+  cursor: pointer;
+  background: var(--heat-0);
+  transition: transform 0.1s ease, border-color 0.1s ease;
+}
+.contrib-legend__item[data-level="1"] { background: var(--heat-1); }
+.contrib-legend__item[data-level="2"] { background: var(--heat-2); }
+.contrib-legend__item[data-level="3"] { background: var(--heat-3); }
+.contrib-legend__item[data-level="4"] { background: var(--heat-4); }
+.contrib-legend__item[data-level="5"] { background: var(--heat-5); }
+.contrib-legend__item:hover {
+  transform: scale(1.25);
+  border-color: var(--ak-amber);
+}
+
+/* 点击弹层 */
+.contrib-tooltip {
+  position: absolute;
+  transform: translate(-50%, -100%);
+  padding: 0.3rem 0.6rem;
+  border-radius: 3px;
+  background: var(--md-primary-fg-color);
+  color: #fff;
+  font-size: 0.7rem;
+  white-space: nowrap;
+  pointer-events: none;
+  z-index: 100;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+}
 
 /* 评论未配置提示 */
 .giscus-hint {
@@ -367,4 +466,214 @@
 }
 .profile-info li {
   line-height: 1.6;
+}
+
+/* =============================================================
+   明暗主题完善：补齐 Material 语义变量与组件配色
+   ============================================================= */
+
+/* ---------- 浅色模式补充 ---------- */
+:root,
+[data-md-color-scheme="default"] {
+  --md-default-fg-color--lightest: #e8edf5;
+  --md-default-fg-color--lighter:  #7b8596;
+  --md-typeset-a-color--hover:      #1027a6;
+  --md-code-hl-color:               rgba(34, 68, 238, 0.1);
+  --md-code-hl-number-color:        #2244ee;
+  --md-code-hl-string-color:        #12805c;
+  --md-code-hl-keyword-color:       #8b2fc9;
+  --md-code-hl-comment-color:       #7b8596;
+  --md-code-hl-function-color:      #c43a31;
+  --md-shadow-z1: 0 0.2rem 0.5rem rgba(23, 37, 84, 0.06), 0 0 0.05rem rgba(23, 37, 84, 0.08);
+  --md-shadow-z2: 0 0.2rem 0.6rem rgba(23, 37, 84, 0.08), 0 0 0.05rem rgba(23, 37, 84, 0.1);
+  --md-shadow-z3: 0 0.8rem 1.2rem rgba(23, 37, 84, 0.1), 0 0.2rem 0.6rem rgba(23, 37, 84, 0.06);
+
+  /* 搜索 */
+  --md-search-bg-color: var(--ak-raised);
+  --md-search-result-bg-color: var(--ak-raised);
+
+  /* 页脚 */
+  --md-footer-bg-color:        var(--md-primary-fg-color);
+  --md-footer-bg-color--dark:  var(--md-primary-fg-color--dark);
+  --md-footer-fg-color:        #f5f7fb;
+  --md-footer-fg-color--light: #c4cbd8;
+}
+
+/* ---------- 深色模式补充 ---------- */
+[data-md-color-scheme="slate"] {
+  --md-default-fg-color--lightest: #2f353a;
+  --md-default-fg-color--lighter:  #6f7a80;
+  --md-typeset-a-color--hover:      #8faeff;
+  --md-code-hl-color:               rgba(77, 120, 255, 0.2);
+  --md-code-hl-number-color:        #a8c0ff;
+  --md-code-hl-string-color:        #7ddb8f;
+  --md-code-hl-keyword-color:       #c792ea;
+  --md-code-hl-comment-color:       #6f7a80;
+  --md-code-hl-function-color:      #ff9c94;
+  --md-shadow-z1: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.4), 0 0 0.05rem rgba(0, 0, 0, 0.5);
+  --md-shadow-z2: 0 0.2rem 0.5rem rgba(0, 0, 0, 0.45), 0 0 0.05rem rgba(0, 0, 0, 0.55);
+  --md-shadow-z3: 0 0.8rem 1.2rem rgba(0, 0, 0, 0.5), 0 0.2rem 0.6rem rgba(0, 0, 0, 0.45);
+
+  /* 搜索 */
+  --md-search-bg-color: var(--ak-raised);
+  --md-search-result-bg-color: var(--ak-raised);
+
+  /* 页脚 */
+  --md-footer-bg-color:        var(--md-primary-fg-color);
+  --md-footer-bg-color--dark:  var(--md-primary-fg-color--dark);
+  --md-footer-fg-color:        #e6e9ea;
+  --md-footer-fg-color--light: #8a9399;
+}
+
+/* =============================================================
+   代码高亮（Pygments）明暗适配
+   ============================================================= */
+[data-md-color-scheme="default"] .highlight {
+  --md-code-hl-color: rgba(59, 107, 255, 0.1);
+}
+[data-md-color-scheme="slate"] .highlight {
+  --md-code-hl-color: rgba(77, 120, 255, 0.18);
+}
+
+/* 通用 token 映射到语义色 */
+.highlight .k,
+.highlight .kd,
+.highlight .kn,
+.highlight .kr,
+.highlight .kt { color: var(--md-code-hl-keyword-color); }
+.highlight .s,
+.highlight .sa,
+.highlight .sb,
+.highlight .sc,
+.highlight .sd,
+.highlight .s1,
+.highlight .s2 { color: var(--md-code-hl-string-color); }
+.highlight .c,
+.highlight .cm,
+.highlight .c1,
+.highlight .cs { color: var(--md-code-hl-comment-color); font-style: italic; }
+.highlight .nf,
+.highlight .fm { color: var(--md-code-hl-function-color); }
+.highlight .m,
+.highlight .mi,
+.highlight .mf,
+.highlight .mh { color: var(--md-code-hl-number-color); }
+
+/* =============================================================
+   Admonition 类型配色（明暗通用，依赖 accent 变量）
+   ============================================================= */
+.md-typeset .admonition,
+.md-typeset details {
+  box-shadow: var(--md-shadow-z1);
+}
+.md-typeset .admonition-title,
+.md-typeset summary {
+  font-weight: 700;
+}
+.md-typeset .note,
+.md-typeset .info {
+  border-left-color: var(--ak-amber);
+}
+.md-typeset .tip,
+.md-typeset .success {
+  border-left-color: #1f9d55;
+}
+.md-typeset .warning,
+.md-typeset .attention,
+.md-typeset .caution {
+  border-left-color: #d97706;
+}
+.md-typeset .danger,
+.md-typeset .error,
+.md-typeset .failure {
+  border-left-color: #dc2626;
+}
+.md-typeset .question,
+.md-typeset .abstract,
+.md-typeset .summary,
+.md-typeset .tldr {
+  border-left-color: var(--ak-steel);
+}
+
+/* =============================================================
+   其他组件明暗细节
+   ============================================================= */
+
+/* 表格行 hover */
+.md-typeset table:not([class]) tbody tr:hover {
+  background: var(--ak-raised);
+}
+
+/* 搜索输入框 */
+.md-search__input {
+  background: var(--ak-surface);
+  border: 1px solid var(--ak-line);
+}
+
+/* 页脚链接 */
+.md-footer a {
+  color: var(--ak-amber-deep);
+}
+
+/* 代码块标题栏（可选 pymdownx） */
+.md-typeset .highlight > .filename {
+  background: var(--ak-surface);
+  color: var(--ak-ink-soft);
+  border-bottom: 1px solid var(--ak-line);
+}
+
+/* 引用块在深色下抬升更明显 */
+[data-md-color-scheme="slate"] .md-typeset blockquote {
+  background: var(--ak-surface);
+}
+
+/* 侧边栏滚动条与底色 */
+.md-sidebar {
+  color: var(--ak-ink-soft);
+}
+
+/* =============================================================
+   浅色模式细节优化
+   ============================================================= */
+[data-md-color-scheme="default"] .md-typeset code:not(.highlight code) {
+  background: #eef2fb;
+  color: #1633b8;
+}
+
+[data-md-color-scheme="default"] .md-typeset .highlight {
+  background: #f0f3f9;
+}
+
+[data-md-color-scheme="default"] .grid.cards > ul > li,
+[data-md-color-scheme="default"] .contrib-year {
+  background: var(--ak-raised);
+  box-shadow: var(--md-shadow-z1);
+}
+
+[data-md-color-scheme="default"] .md-typeset table:not([class]) th {
+  background: #e8edf5;
+  color: #1f2430;
+}
+
+[data-md-color-scheme="default"] .md-typeset table:not([class]) tbody tr:nth-child(even) {
+  background: #fafbfe;
+}
+
+[data-md-color-scheme="default"] .profile-right {
+  background: var(--ak-raised);
+  box-shadow: var(--md-shadow-z2);
+}
+
+/* 深色模式对应细节 */
+[data-md-color-scheme="slate"] .grid.cards > ul > li,
+[data-md-color-scheme="slate"] .contrib-year {
+  box-shadow: var(--md-shadow-z1);
+}
+
+[data-md-color-scheme="slate"] .profile-right {
+  box-shadow: var(--md-shadow-z2);
+}
+
+[data-md-color-scheme="slate"] .md-typeset table:not([class]) tbody tr:nth-child(even) {
+  background: #1f2327;
 }

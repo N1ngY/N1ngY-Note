@@ -1,6 +1,7 @@
-"""构建期钩子：基于 git 历史自动生成「贡献热力图」数据。
+"""构建期钩子：基于 git 历史自动生成「贡献热力图」数据
 
-- on_pre_build 时读取当前仓库的 git log，生成 docs/javascripts/contrib-data.js（每日提交数 + 统计数据）。
+- on_pre_build 时读取当前仓库的 git log，生成 docs/javascripts/contrib-data.js：
+  按「年份 → 月份 → 日期 → 提交次数」聚合，并附带统计信息。
 
 没有 git 仓库时写入空数据，构建不会失败。
 """
@@ -9,15 +10,14 @@ import json
 import os
 import subprocess
 from collections import Counter
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 
 DOCS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs")
 CONTRIB_JS_PATH = os.path.join(DOCS_DIR, "javascripts", "contrib-data.js")
 
 
-
 def _git_log():
-    """返回 [(iso_date, short_hash, subject), ...]，按时间倒序。"""
+    """返回 [(iso_date, short_hash, subject), ...]，按时间正序。"""
     try:
         out = subprocess.run(
             ["git", "log", "--date=short", "--pretty=format:%ad|%h|%s"],
@@ -29,8 +29,10 @@ def _git_log():
         entries = []
         for line in out.stdout.strip().splitlines():
             parts = line.split("|", 2)
-            if len(parts) == 3:
-                entries.append(tuple(parts))
+            if len(parts) == 3 and len(parts[0]) == 10:
+                entries.append((parts[0], parts[1], parts[2]))
+        # git log 默认倒序，转为正序便于按时间处理
+        entries.reverse()
         return entries
     except Exception:
         return []
@@ -50,11 +52,19 @@ def _safe_write(path, content):
             print(f"[hooks] 警告：无法写入 {path}，已跳过")
 
 
-def _streaks(days):
-    """根据有提交的日期集合计算 当前/最长 连续天数。"""
-    if not days:
+def _streaks(iso_dates):
+    """根据有提交的日期字符串集合计算 当前/最长 连续天数。"""
+    if not iso_dates:
         return 0, 0
-    day_set = set(days)
+    day_set = set()
+    for s in iso_dates:
+        try:
+            y, m, d = s.split("-")
+            day_set.add(date(int(y), int(m), int(d)))
+        except ValueError:
+            continue
+    if not day_set:
+        return 0, 0
     longest = cur = 0
     for d in sorted(day_set):
         if d - timedelta(days=1) in day_set:
@@ -72,27 +82,30 @@ def _streaks(days):
 
 
 def _write_contrib(entries):
-    counter = Counter(d for d, _, _ in entries)
-    today = date.today()
-    start = today - timedelta(days=364)
-    data = {}
-    d = start
-    while d <= today:
-        key = d.isoformat()
-        if counter.get(key):
-            data[key] = counter[key]
-        d += timedelta(days=1)
-    active_days = len(counter)
-    streak, longest = _streaks(
-        [datetime.strptime(k, "%Y-%m-%d").date() for k in counter]
-    )
+    # 按 年份 -> 月份 -> 日期 -> 次数 聚合
+    by_year = {}
+    days = []
+    for iso_date, _, _ in entries:
+        try:
+            y, m, d = iso_date.split("-")
+        except ValueError:
+            continue
+        day = date(int(y), int(m), int(d))
+        days.append(day)
+        year_node = by_year.setdefault(y, {})
+        month_node = year_node.setdefault(str(int(m)), {})
+        month_node[d] = month_node.get(d, 0) + 1
+
+    years = sorted(by_year.keys())
+    counter = Counter(d.isoformat() for d in days)
+    streak, longest = _streaks([d.isoformat() for d in days])
+
     payload = {
-        "start": start.isoformat(),
-        "end": today.isoformat(),
-        "counts": data,
+        "years": years,
+        "by_year": by_year,
         "stats": {
             "total_commits": len(entries),
-            "active_days": active_days,
+            "active_days": len(counter),
             "current_streak": streak,
             "longest_streak": longest,
         },
@@ -107,4 +120,4 @@ def _write_contrib(entries):
 def on_pre_build(config, **kwargs):
     entries = _git_log()
     _write_contrib(entries)
-    print(f"[hooks] 热力图数据已生成（{len(entries)} 条提交）")
+    print(f"[hooks] 热力图数据已生成（{len(entries)} 条提交，{len(set(e[0] for e in entries))} 个活跃日）")

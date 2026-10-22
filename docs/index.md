@@ -23,10 +23,10 @@ hide:
 
 **N1ngY**
 
-> 记录学习、折腾与生活。
+> Mulling over a life that threatens to become dull
 
 -   :material-github: [GitHub](https://github.com/N1ngY)
--   :material-tag-multiple-outline: 计算机科学 · CTF · Devops · Life
+-   :material-tag-multiple-outline: Thinking
 
 </div>
 
