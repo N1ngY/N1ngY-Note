@@ -25,7 +25,7 @@ hide:
 
 > 记录学习、折腾与生活。
 
--   :material-github: [GitHub](https://github.com/)
+-   :material-github: [GitHub](https://github.com/N1ngY)
 -   :material-tag-multiple-outline: 计算机科学 · CTF · Devops · Life
 
 </div>
