@@ -434,18 +434,95 @@
 }
 
 .profile-right {
+  position: relative;
   flex: 1 1 320px;
   max-width: 720px;
+  perspective: 1200px;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.profile-flip {
+  position: relative;
+  width: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+  will-change: transform;
+}
+
+/* 3D 面：只负责翻转与背面隐藏，不承载毛玻璃/裁剪 */
+.profile-face {
+  position: relative;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* 亚克力毛玻璃层：斜切角、模糊、光斑都放在这里，避免破坏 3D 背面隐藏 */
+.profile-glass {
+  position: relative;
   display: flex;
   gap: 1.2rem;
   align-items: center;
   padding: 1.2rem 1.4rem;
-  background: var(--ak-raised);
-  border: 1px solid var(--ak-line);
+  background:
+    linear-gradient(135deg,
+      color-mix(in srgb, #ffffff 20%, transparent),
+      color-mix(in srgb, var(--ak-raised) 46%, transparent) 45%,
+      color-mix(in srgb, #000000 10%, transparent));
+  backdrop-filter: blur(22px) saturate(180%) brightness(1.08);
+  -webkit-backdrop-filter: blur(22px) saturate(180%) brightness(1.08);
+  border: 1px solid color-mix(in srgb, var(--ak-ink) 14%, transparent);
+  border-top-color: color-mix(in srgb, #ffffff 45%, transparent);
   clip-path: polygon(
     12px 0, 100% 0, 100% calc(100% - 12px),
     calc(100% - 12px) 100%, 0 100%, 0 12px
   );
+}
+
+/* 跟随鼠标的闪耀光斑（在毛玻璃层上） */
+.profile-glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in srgb, #ffffff 42%, transparent),
+      transparent 62%);
+  mix-blend-mode: overlay;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.profile-right:hover .profile-glass::after {
+  opacity: 1;
+}
+
+/* 背面：翻转后显示 flag */
+.profile-back {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+}
+.profile-back .profile-glass {
+  justify-content: center;
+  text-align: center;
+  width: 100%;
+  height: 100%;
+}
+
+.profile-flag {
+  font-family: ui-monospace, "SF Mono", "JetBrains Mono", Consolas, monospace;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--ak-amber);
+  letter-spacing: 0.03em;
+  word-break: break-all;
+  text-shadow: 0 0 12px color-mix(in srgb, var(--ak-amber) 45%, transparent);
+}
+
+/* 翻转：点击卡片时沿左右方向（rotateY）反转一次，非无限制旋转 */
+.profile-right.is-flipped .profile-flip {
+  transform: rotateY(180deg);
 }
 
 .profile-avatar {
@@ -477,6 +554,8 @@
   display: inline-flex;
   align-items: center;
   gap: 0.35em;
+  margin-left: 1.2em;
+  transform: translateY(0.15em);
   cursor: pointer;
   color: var(--md-typeset-a-color);
   font-size: inherit;
@@ -713,8 +792,7 @@
   background: #fafbfe;
 }
 
-[data-md-color-scheme="default"] .profile-right {
-  background: var(--ak-raised);
+[data-md-color-scheme="default"] .profile-glass {
   box-shadow: var(--md-shadow-z2);
 }
 
@@ -724,7 +802,7 @@
   box-shadow: var(--md-shadow-z1);
 }
 
-[data-md-color-scheme="slate"] .profile-right {
+[data-md-color-scheme="slate"] .profile-glass {
   box-shadow: var(--md-shadow-z2);
 }
 
@@ -733,51 +811,208 @@
 }
 
 /* =============================================================
-   友链页面：三列卡片
+   友链页面：三列亚克力翻转卡片
    ============================================================= */
+.friend-group {
+  margin: 0 0 1.6rem;
+}
+
+.friend-group:first-of-type .friend-group-title {
+  margin-top: 0.5rem;
+}
+
+.friend-group-head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0 0 0.9rem;
+}
+
+/* 分组标题：居中放大、自上而下由清晰渐变为虚影 */
+.friend-group-title {
+  position: relative;
+  margin: 1.4rem 0 0;
+  text-align: center;
+  font-size: 1.9rem;
+  font-weight: 800;
+  line-height: 1.25;
+  letter-spacing: 0.42em;
+  text-indent: 0.42em;
+  color: transparent;
+  background-image: linear-gradient(
+    180deg,
+    var(--ak-amber) 0%,
+    color-mix(in srgb, var(--ak-amber) 78%, transparent) 40%,
+    color-mix(in srgb, var(--ak-amber) 26%, transparent) 70%,
+    transparent 100%
+  );
+  -webkit-background-clip: text;
+  background-clip: text;
+}
+
+/* 底部虚影：同一文字模糊后只在下半部分显现 */
+.friend-group-title::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  color: var(--ak-amber);
+  filter: blur(7px);
+  opacity: 0.55;
+  -webkit-mask-image: linear-gradient(180deg, transparent 42%, #000 100%);
+  mask-image: linear-gradient(180deg, transparent 42%, #000 100%);
+  pointer-events: none;
+}
+
+/* 分组分隔符：通栏实线，正中一枚克莱因蓝菱形 */
+.friend-group-divider {
+  position: relative;
+  width: 100%;
+  height: 1px;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    var(--ak-line) 10%,
+    var(--ak-line) 90%,
+    transparent
+  );
+  -webkit-mask-image: radial-gradient(13px circle at 50% 50%, transparent 66%, #000 68%);
+  mask-image: radial-gradient(13px circle at 50% 50%, transparent 66%, #000 68%);
+}
+
+.friend-group-divider::before {
+  content: "";
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  width: 6px;
+  height: 6px;
+  background: var(--ak-amber);
+  transform: translate(-50%, -50%) rotate(45deg);
+}
+
 .friends-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 1rem;
-  margin: 1rem 0 2rem;
+  gap: 1.5rem;
+  margin: 1.25rem 0 0;
 }
 
+/* 外层：透视 + 跟随鼠标的有界倾斜 */
 .friend-card {
+  position: relative;
+  perspective: 1000px;
+  transform: rotateX(var(--rx, 0deg)) rotateY(var(--ry, 0deg));
+  transition: transform 0.3s cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.friend-flip {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  transition: transform 0.7s cubic-bezier(0.4, 0.2, 0.2, 1);
+  will-change: transform;
+}
+
+/* 3D 面：只负责翻转与背面隐藏 */
+.friend-face {
+  position: relative;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+
+/* 亚克力毛玻璃层 */
+.friend-glass {
+  position: relative;
   display: flex;
   flex-direction: column;
   align-items: center;
   text-align: center;
-  gap: 0.4rem;
-  padding: 1.4rem 1rem;
-  background: var(--ak-raised);
-  border: 1px solid var(--ak-line);
+  gap: 0.3rem;
+  padding: 0.9rem 0.8rem;
+  background:
+    linear-gradient(135deg,
+      color-mix(in srgb, #ffffff 20%, transparent),
+      color-mix(in srgb, var(--ak-raised) 46%, transparent) 45%,
+      color-mix(in srgb, #000000 10%, transparent));
+  backdrop-filter: blur(22px) saturate(180%) brightness(1.08);
+  -webkit-backdrop-filter: blur(22px) saturate(180%) brightness(1.08);
+  border: 1px solid color-mix(in srgb, var(--ak-ink) 14%, transparent);
+  border-top-color: color-mix(in srgb, #ffffff 45%, transparent);
+  border-radius: 12px;
   box-shadow: var(--md-shadow-z1);
 }
 
+/* 跟随鼠标的闪耀光斑 */
+.friend-glass::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 11px;
+  background:
+    radial-gradient(320px circle at var(--mx, 50%) var(--my, 50%),
+      color-mix(in srgb, #ffffff 42%, transparent),
+      transparent 62%);
+  mix-blend-mode: overlay;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+.friend-card:hover .friend-glass::after {
+  opacity: 1;
+}
+
+/* 背面：翻转后显示好友寄语 */
+.friend-back {
+  position: absolute;
+  inset: 0;
+  transform: rotateY(180deg);
+}
+.friend-back .friend-glass {
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  font-size: 0.85rem;
+  color: var(--ak-ink-soft);
+  line-height: 1.7;
+}
+
 .friend-avatar {
-  width: 72px;
-  height: 72px;
+  width: 56px;
+  height: 56px;
   border-radius: 50%;
   border: 2px solid var(--ak-amber);
   object-fit: cover;
   background: var(--ak-bg);
 }
 
-.friend-card strong {
-  font-size: 1rem;
+.friend-glass strong {
+  font-size: 0.9rem;
 }
 
-.friend-card a {
+.friend-glass a {
   color: var(--ak-amber);
-  font-size: 0.8rem;
-  word-break: break-all;
+  font-size: 1rem;
+  text-decoration: none;
+}
+.friend-glass .friend-link-icon {
+  width: 0.85em;
+  height: 0.85em;
+  vertical-align: -0.12em;
 }
 
-.friend-card p {
+.friend-glass p {
   margin: 0;
   color: var(--ak-ink-soft);
   font-size: 0.82rem;
   line-height: 1.6;
+}
+
+/* 翻转：点击卡片时沿左右方向反转一次，非无限制旋转 */
+.friend-card.is-flipped .friend-flip {
+  transform: rotateY(180deg);
 }
 
 /* 移动端降为一列 */
