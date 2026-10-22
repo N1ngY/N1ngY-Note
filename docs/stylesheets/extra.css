@@ -418,11 +418,13 @@
   flex-wrap: wrap;
   gap: 2rem;
   align-items: center;
-  margin: 1rem 0 2rem;
+  justify-content: flex-start;
+  margin: 6rem 0 2rem -6rem;
 }
 
 .profile-left {
   flex: 1 1 320px;
+  max-width: 460px;
 }
 .profile-left h1 {
   margin-bottom: 0.4rem;
@@ -432,7 +434,8 @@
 }
 
 .profile-right {
-  flex: 1 1 260px;
+  flex: 1 1 320px;
+  max-width: 720px;
   display: flex;
   gap: 1.2rem;
   align-items: center;
@@ -466,6 +469,57 @@
 }
 .profile-info li {
   line-height: 1.6;
+}
+
+/* QQ 账号入口：点击/悬停显示 tooltip */
+.qq-chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35em;
+  cursor: pointer;
+  color: var(--md-typeset-a-color);
+  font-size: inherit;
+  line-height: inherit;
+  outline: none;
+  border-radius: 4px;
+}
+.qq-chip:focus-visible {
+  box-shadow: 0 0 0 2px var(--ak-amber);
+}
+.qq-icon {
+  width: 1em;
+  height: 1em;
+  vertical-align: -0.125em;
+}
+.qq-icon path {
+  fill: #ffffff;
+}
+.qq-tip {
+  position: absolute;
+  left: 0;
+  top: calc(100% + 0.45rem);
+  white-space: nowrap;
+  padding: 0.35rem 0.6rem;
+  background: var(--ak-raised);
+  border: 1px solid var(--ak-line);
+  border-radius: 6px;
+  box-shadow: var(--md-shadow-z2);
+  color: var(--ak-ink-soft);
+  font-size: 0.78rem;
+  line-height: 1.4;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-4px);
+  transition: opacity 0.15s ease, transform 0.15s ease, visibility 0.15s;
+  z-index: 30;
+  pointer-events: none;
+}
+.qq-chip:hover .qq-tip,
+.qq-chip:focus .qq-tip {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 
 /* =============================================================
