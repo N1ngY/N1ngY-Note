@@ -1,0 +1,22 @@
+{#- giscus 评论系统：在 mkdocs.yml 的 extra.giscus 中填入仓库信息后自动启用 -#}
+{% if page.meta.comments and config.extra.giscus and config.extra.giscus.repo %}
+<div class="giscus-container">
+  <script src="https://giscus.app/client.js"
+          data-repo="{{ config.extra.giscus.repo }}"
+          data-repo-id="{{ config.extra.giscus.repo_id }}"
+          data-category="{{ config.extra.giscus.category }}"
+          data-category-id="{{ config.extra.giscus.category_id }}"
+          data-mapping="{{ config.extra.giscus.mapping | default('pathname') }}"
+          data-strict="0"
+          data-reactions-enabled="{{ config.extra.giscus.reactions_enabled | default('1') }}"
+          data-emit-metadata="0"
+          data-input-position="{{ config.extra.giscus.input_position | default('bottom') }}"
+          data-theme="preferred_color_scheme"
+          data-lang="{{ config.extra.giscus.lang | default('zh-CN') }}"
+          crossorigin="anonymous"
+          async>
+  </script>
+</div>
+{% elif page.meta.comments %}
+<p class="giscus-hint"><em>评论系统未配置：请在 <code>mkdocs.yml</code> 的 <code>extra.giscus</code> 中填写仓库信息（参见 <a href="https://giscus.app/zh-CN">giscus 文档</a>）。</em></p>
+{% endif %}

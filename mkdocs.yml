@@ -1,0 +1,180 @@
+# =============================================================
+# N1ngYのNote —— 基于 MkDocs Material 二次开发的个人笔记本
+# =============================================================
+
+site_name: N1ngYのNote
+site_description: N1ngY 的个人笔记本 —— 知识分享与记录
+site_author: N1ngY
+site_url: ""
+
+copyright: Copyright &copy; 2026 N1ngY · Made with <a href="https://squidfunk.github.io/mkdocs-material/" target="_blank" rel="noopener">Material for MkDocs</a>
+
+# -------------------------------------------------------------
+# 主题配置：Material 主题 + 克莱因蓝配色（见 extra.css）
+# -------------------------------------------------------------
+theme:
+  name: material
+  language: zh
+  custom_dir: overrides
+  logo: assets/logo.svg
+  favicon: assets/favicon.svg
+  font: false                       # 不加载 Google Fonts，使用系统字体栈（中文友好）
+  icon:
+    repo: fontawesome/brands/github
+  palette:
+    # 浅色模式（雾色工业灰）
+    - media: "(prefers-color-scheme: light)"
+      scheme: default
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-night
+        name: 切换到深色模式
+    # 深色模式（炭黑 + 克莱因蓝）
+    - media: "(prefers-color-scheme: dark)"
+      scheme: slate
+      primary: custom
+      accent: custom
+      toggle:
+        icon: material/weather-sunny
+        name: 切换到浅色模式
+  features:
+    - navigation.tabs               # 顶部一级标签页
+    - navigation.tabs.sticky
+    - navigation.sections           # 侧边栏按节展开
+    - navigation.expand
+    - navigation.indexes            # 分区首页
+    - navigation.top
+    - navigation.tracking
+    - navigation.footer
+    - toc.follow                    # 目录跟随滚动
+    - search.highlight
+    - search.suggest
+    - search.share
+    - content.tabs.link
+    - content.code.copy             # 代码块一键复制
+    - content.code.annotate
+    - content.action.edit
+    - content.action.view
+
+# -------------------------------------------------------------
+# 插件
+# -------------------------------------------------------------
+plugins:
+  # 中文全文搜索：自定义分隔符，将中日韩字符逐字切分
+  - search:
+      lang: zh
+      separator: '[\s\-\.\!\?\(\)\[\]\{\},:;，。：；！？（）【】「」、—…·]+|(?=[一-鿿])|(?<=[一-鿿])'
+  # 页面修订时间（依赖 git 历史）
+  - git-revision-date-localized:
+      enable_creation_date: true
+      type: date
+      locale: zh
+      timezone: Asia/Shanghai
+      fallback_to_build_date: true
+
+# -------------------------------------------------------------
+# 构建期钩子：生成贡献热力图数据
+# -------------------------------------------------------------
+hooks:
+  - hooks/hooks.py
+
+# -------------------------------------------------------------
+# Markdown 扩展
+# -------------------------------------------------------------
+markdown_extensions:
+  # 代码
+  - pymdownx.highlight:
+      anchor_linenums: true
+      line_spans: __span
+      pygments_lang_class: true
+  - pymdownx.superfences
+  - pymdownx.inlinehilite
+  - pymdownx.snippets
+  # 数学公式（MathJax 3）
+  - pymdownx.arithmatex:
+      generic: true
+  # 排版增强
+  - admonition
+  - pymdownx.details
+  - pymdownx.tabbed:
+      alternate_style: true
+  - attr_list
+  - md_in_html
+  - def_list
+  - footnotes
+  - pymdownx.tasklist:
+      custom_checkbox: true
+  - pymdownx.emoji:
+      emoji_index: !!python/name:material.extensions.emoji.twemoji
+      emoji_generator: !!python/name:material.extensions.emoji.to_svg
+  - pymdownx.caret
+  - pymdownx.mark
+  - pymdownx.tilde
+  - pymdownx.betterem
+  - toc:
+      permalink: true
+      toc_depth: 3
+
+# -------------------------------------------------------------
+# 额外资源
+# -------------------------------------------------------------
+extra_css:
+  - stylesheets/extra.css
+
+extra_javascript:
+  - javascripts/mathjax.js
+  - javascripts/vendor/tex-svg-full.js     # 本地化 MathJax 3（SVG 输出，无字体依赖）
+  - javascripts/contrib-data.js   # 由 hooks/hooks.py 在构建时生成
+  - javascripts/contrib.js
+# -------------------------------------------------------------
+# 评论系统（giscus）—— 填入你的仓库信息后自动启用
+# 申请方式：https://giscus.app/zh-CN
+# -------------------------------------------------------------
+extra:
+  giscus:
+    repo: ""              # 例如 "N1ngY/N1ngY-Note"
+    repo_id: ""
+    category: "Announcements"
+    category_id: ""
+    mapping: pathname
+    reactions_enabled: "1"
+    input_position: bottom
+    lang: zh-CN
+  generator: false
+
+# -------------------------------------------------------------
+# 编辑按钮指向的仓库（按需修改）
+# -------------------------------------------------------------
+# repo_url: https://github.com/N1ngY/N1ngY-Note
+# edit_uri: edit/main/docs/
+
+# -------------------------------------------------------------
+# 导航
+# -------------------------------------------------------------
+nav:
+  - Home: index.md
+  - Computer Science:
+      - cs/index.md
+      - 编程语言: cs/languages/index.md
+      - 系统与底层: cs/systems/index.md
+      - 算法与数学: cs/algorithms/index.md
+  - CTF:
+      - ctf/index.md
+      - Web: ctf/web/index.md
+      - Pwn: ctf/pwn/index.md
+      - Reverse: ctf/reverse/index.md
+      - Crypto: ctf/crypto/index.md
+      - Misc: ctf/misc/index.md
+      - AI: ctf/ai/index.md
+      - WP: ctf/wp/index.md
+  - Devops:
+      - devops/index.md
+      - 容器: devops/container/index.md
+      - 部署与 CI/CD: devops/cicd/index.md
+      - 工具链: devops/tools/index.md
+  - Life:
+      - life/index.md
+      - 日常: life/daily/index.md
+      - 阅读: life/reading/index.md
+  - Heatmap: heatmap.md

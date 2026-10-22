@@ -1,0 +1,370 @@
+/* =============================================================
+   N1ngYのNote —— 克莱因蓝设计系统
+   深色工业底 + 冷灰面 + 克莱因蓝高亮 + 锐利斜切边
+   ============================================================= */
+
+/* ---------- 浅色模式：雾色工业灰（克莱因蓝点缀） ---------- */
+:root,
+[data-md-color-scheme="default"] {
+  /* 底与墨 */
+  --ak-bg:            #eef0f2;
+  --ak-raised:        #f7f9fa;
+  --ak-surface:       #e2e5e8;
+  --ak-ink:           #23292d;
+  --ak-ink-soft:      #5c666c;
+
+  /* 克莱因蓝高亮（IKB 主色） */
+  --ak-amber:         #002fa7;
+  --ak-amber-deep:    #00227a;
+
+  /* 冷钢蓝 */
+  --ak-steel:         #4d6a78;
+  --ak-line:          rgba(30, 40, 45, 0.14);
+
+  /* Material 变量映射 */
+  --md-default-bg-color:        var(--ak-bg);
+  --md-default-fg-color:        var(--ak-ink);
+  --md-default-fg-color--light: var(--ak-ink-soft);
+  --md-primary-fg-color:        #2a2f33;
+  --md-primary-fg-color--dark:  #1b1f22;
+  --md-accent-fg-color:         var(--ak-amber);
+  --md-typeset-a-color:         var(--ak-amber-deep);
+  --md-code-bg-color:           #dfe3e6;
+  --md-code-fg-color:           #2b3136;
+
+  /* 字体：中文优先的系统栈 */
+  --md-text-font-family:
+    "Inter", -apple-system, "PingFang SC", "Hiragino Sans GB",
+    "Microsoft YaHei", "Noto Sans CJK SC", "Source Han Sans SC", sans-serif;
+  --md-code-font-family:
+    ui-monospace, "SF Mono", "JetBrains Mono", "Cascadia Code",
+    Consolas, "Courier New", monospace;
+
+  /* 贡献热力图：克莱因蓝色阶 */
+  --heat-0: #e4e6e9;
+  --heat-1: #c6d2f2;
+  --heat-2: #8fa8e6;
+  --heat-3: #4a6fd6;
+  --heat-4: #002fa7;
+
+  color-scheme: light;
+}
+
+/* ---------- 深色模式：炭黑 + 克莱因蓝 ---------- */
+[data-md-color-scheme="slate"] {
+  --ak-bg:            #1a1d1f;
+  --ak-raised:        #22262a;
+  --ak-surface:       #282d31;
+  --ak-ink:           #e6e9ea;
+  --ak-ink-soft:      #a3adb2;
+
+  --ak-amber:         #3b6bff;
+  --ak-amber-deep:    #5f8bff;
+  --ak-steel:         #6f8b99;
+  --ak-line:          rgba(230, 240, 245, 0.14);
+
+  --md-default-bg-color:        var(--ak-bg);
+  --md-default-fg-color:        var(--ak-ink);
+  --md-default-fg-color--light: var(--ak-ink-soft);
+  --md-primary-fg-color:        #121416;
+  --md-primary-fg-color--dark:  #0b0d0e;
+  --md-accent-fg-color:         var(--ak-amber);
+  --md-typeset-a-color:         var(--ak-amber-deep);
+  --md-code-bg-color:           #14171a;
+  --md-code-fg-color:           #d5dcdf;
+
+  --heat-0: #26292b;
+  --heat-1: #1c2a52;
+  --heat-2: #1f3d8f;
+  --heat-3: #2d55c7;
+  --heat-4: #4d78ff;
+
+  color-scheme: dark;
+}
+
+/* =============================================================
+   斜切角工具
+   ============================================================= */
+.ak-corner,
+.md-typeset .admonition,
+.md-typeset details,
+.md-typeset .highlight,
+.grid.cards > ul > li {
+  clip-path: polygon(
+    12px 0, 100% 0, 100% calc(100% - 12px),
+    calc(100% - 12px) 100%, 0 100%, 0 12px
+  );
+}
+
+/* =============================================================
+   全局质感
+   ============================================================= */
+.md-typeset {
+  font-size: 0.82rem;
+  letter-spacing: 0.01em;
+}
+
+.md-typeset p,
+.md-typeset li {
+  line-height: 1.85;
+}
+
+.md-typeset h1,
+.md-typeset h2,
+.md-typeset h3 {
+  font-weight: 700;
+  letter-spacing: 0.02em;
+}
+
+/* 二级标题：左侧克莱因蓝菱形 + 细线 */
+.md-typeset h2 {
+  border-bottom: 1px solid var(--ak-line);
+  padding-bottom: 0.3em;
+  position: relative;
+}
+.md-typeset h2::before {
+  content: "";
+  display: inline-block;
+  width: 0.32em;
+  height: 0.32em;
+  margin-right: 0.5em;
+  background: var(--ak-amber);
+  border-radius: 1px;
+  transform: rotate(45deg) translateY(-0.06em);
+}
+
+/* 三级标题：左竖条 */
+.md-typeset h3::before {
+  content: "";
+  display: inline-block;
+  width: 0.2em;
+  height: 0.8em;
+  margin-right: 0.45em;
+  background: var(--ak-steel);
+  transform: translateY(0.05em);
+}
+
+/* 链接：克莱因蓝 + 悬停下划线 */
+.md-typeset a {
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+}
+
+/* 引用块：克莱因蓝左线 + 抬升面 */
+.md-typeset blockquote {
+  border-left: 0.16rem solid var(--ak-amber);
+  background: var(--ak-raised);
+  padding: 0.5rem 0.9rem;
+  border-radius: 0;
+}
+
+/* 行内代码 */
+.md-typeset code:not(.highlight code) {
+  border-radius: 2px;
+  padding: 0.05em 0.35em;
+  font-size: 0.85em;
+  border: 1px solid var(--ak-line);
+}
+
+/* 代码块 */
+.md-typeset .highlight {
+  border-radius: 0;
+  border: 1px solid var(--ak-line);
+  background: var(--md-code-bg-color);
+}
+
+/* Admonition */
+.md-typeset .admonition,
+.md-typeset details {
+  border-radius: 0;
+  border: 1px solid var(--ak-line);
+  border-left-width: 0.22rem;
+}
+
+/* 表格 */
+.md-typeset table:not([class]) {
+  border-radius: 0;
+  box-shadow: none;
+  border: 1px solid var(--ak-line);
+}
+.md-typeset table:not([class]) th {
+  background: var(--ak-surface);
+  letter-spacing: 0.04em;
+}
+
+/* 页头 */
+.md-header {
+  box-shadow: 0 1px 0 var(--ak-line);
+}
+.md-header__title {
+  font-weight: 700;
+  letter-spacing: 0.12em;
+}
+
+/* 导航标签下的克莱因蓝指示条 */
+.md-tabs__link--active,
+.md-tabs__link:hover {
+  color: var(--ak-amber);
+}
+.md-tabs__link--active::after {
+  background: var(--ak-amber);
+}
+
+/* 侧边栏激活项：克莱因蓝左刻度 */
+.md-nav__link--active {
+  color: var(--ak-amber);
+}
+.md-nav__item .md-nav__link--active::before {
+  content: "";
+  position: absolute;
+  left: -0.6rem;
+  top: 50%;
+  transform: translateY(-50%) rotate(45deg);
+  width: 0.35rem;
+  height: 0.35rem;
+  background: var(--ak-amber);
+}
+
+/* 页脚 */
+.md-footer {
+  --md-footer-bg-color: var(--md-primary-fg-color--dark);
+  border-top: 1px solid var(--ak-line);
+}
+
+/* =============================================================
+   贡献热力图
+   ============================================================= */
+.contrib-wrap {
+  overflow-x: auto;
+  padding: 0.4rem 0;
+}
+.contrib-graph {
+  display: inline-flex;
+  gap: 3px;
+}
+.contrib-week {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+.contrib-day {
+  width: 11px;
+  height: 11px;
+  border-radius: 2px;
+  background: var(--heat-0);
+}
+.contrib-day[data-level="1"] { background: var(--heat-1); }
+.contrib-day[data-level="2"] { background: var(--heat-2); }
+.contrib-day[data-level="3"] { background: var(--heat-3); }
+.contrib-day[data-level="4"] { background: var(--heat-4); }
+.contrib-day[data-future]   { visibility: hidden; }
+
+.contrib-months {
+  display: flex;
+  font-size: 0.6rem;
+  color: var(--ak-ink-soft);
+  margin-bottom: 4px;
+}
+.contrib-months span {
+  flex: none;
+  white-space: nowrap;
+}
+
+.contrib-stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.6rem;
+  margin: 1rem 0 1.4rem;
+}
+.contrib-stat .num {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--ak-amber);
+  font-variant-numeric: tabular-nums;
+}
+.contrib-stat .label {
+  font-size: 0.65rem;
+  color: var(--ak-ink-soft);
+  letter-spacing: 0.05em;
+}
+
+.contrib-legend {
+  display: flex;
+  align-items: center;
+  gap: 3px;
+  font-size: 0.6rem;
+  color: var(--ak-ink-soft);
+  margin-top: 6px;
+}
+.contrib-legend .contrib-day { cursor: default; }
+
+/* 评论未配置提示 */
+.giscus-hint {
+  font-size: 0.7rem;
+  color: var(--ak-ink-soft);
+}
+
+/* 首页卡片栅格 */
+.grid.cards > ul > li {
+  border-radius: 0;
+  border: 1px solid var(--ak-line);
+  background: var(--ak-raised);
+}
+
+/* =============================================================
+   首页个人信息展示页
+   ============================================================= */
+.profile-hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 2rem;
+  align-items: center;
+  margin: 1rem 0 2rem;
+}
+
+.profile-left {
+  flex: 1 1 320px;
+}
+.profile-left h1 {
+  margin-bottom: 0.4rem;
+}
+.profile-left ul {
+  margin-top: 1rem;
+}
+
+.profile-right {
+  flex: 1 1 260px;
+  display: flex;
+  gap: 1.2rem;
+  align-items: center;
+  padding: 1.2rem 1.4rem;
+  background: var(--ak-raised);
+  border: 1px solid var(--ak-line);
+  clip-path: polygon(
+    12px 0, 100% 0, 100% calc(100% - 12px),
+    calc(100% - 12px) 100%, 0 100%, 0 12px
+  );
+}
+
+.profile-avatar {
+  flex: none;
+  width: 120px;
+  height: 120px;
+  border-radius: 50%;
+  border: 2px solid var(--ak-amber);
+  background: var(--ak-bg);
+  object-fit: cover;
+}
+
+.profile-info p {
+  margin: 0.2rem 0 0.6rem;
+  color: var(--ak-ink-soft);
+}
+.profile-info ul {
+  margin: 0;
+  list-style: none;
+  padding: 0;
+}
+.profile-info li {
+  line-height: 1.6;
+}
