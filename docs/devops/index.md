@@ -6,8 +6,8 @@
 
 <div class="grid cards" markdown>
 
--   :material-docker: **容器** —— [:octicons-arrow-right-24: 进入](container/index.md)
--   :material-cloud: **部署与 CI/CD** —— [:octicons-arrow-right-24: 进入](cicd/index.md)
--   :material-console: **工具链** —— [:octicons-arrow-right-24: 进入](tools/index.md)
+-   :material-docker: [Docker](container/index.md)
+-   :material-cloud: [CICD](cicd/index.md)
+-   :material-console: [Tools](tools/index.md)
 
 </div>

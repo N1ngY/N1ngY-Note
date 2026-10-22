@@ -6,12 +6,12 @@
 
 <div class="grid cards" markdown>
 
--   :material-bug: **Web** —— [:octicons-arrow-right-24: 进入](web/index.md)
--   :material-memory: **Pwn** —— [:octicons-arrow-right-24: 进入](pwn/index.md)
--   :material-cog: **Reverse** —— [:octicons-arrow-right-24: 进入](reverse/index.md)
--   :material-lock: **Crypto** —— [:octicons-arrow-right-24: 进入](crypto/index.md)
--   :material-puzzle: **Misc** —— [:octicons-arrow-right-24: 进入](misc/index.md)
--   :material-robot: **AI** —— [:octicons-arrow-right-24: 进入](ai/index.md)
--   :material-notebook: **WP** —— [:octicons-arrow-right-24: 进入](wp/index.md)
+-   :material-bug: [Web](web/index.md)
+-   :material-memory: [Pwn](pwn/index.md)
+-   :material-cog: [Reverse](reverse/index.md)
+-   :material-lock: [Crypto](crypto/index.md)
+-   :material-puzzle: [Misc](misc/index.md)
+-   :material-robot: [AI](ai/index.md)
+-   :material-notebook: [WP](wp/index.md)
 
 </div>

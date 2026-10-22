@@ -6,7 +6,8 @@
 
 <div class="grid cards" markdown>
 
--   :material-coffee: **日常** —— [:octicons-arrow-right-24: 进入](daily/index.md)
--   :material-book-open-variant: **阅读** —— [:octicons-arrow-right-24: 进入](reading/index.md)
+-   :material-coffee: [Daliy](daily/index.md)
+-   :material-coffee: [Test](daily/test-post.md)
+-   :material-book-open-variant: [Books](reading/index.md)
 
 </div>

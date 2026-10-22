@@ -158,9 +158,9 @@ nav:
   - Home: index.md
   - Computer Science:
       - cs/index.md
-      - 编程语言: cs/languages/index.md
-      - 系统与底层: cs/systems/index.md
-      - 算法与数学: cs/algorithms/index.md
+      - Languages: cs/languages/index.md
+      - Systems: cs/systems/index.md
+      - Math: cs/algorithms/index.md
   - CTF:
       - ctf/index.md
       - Web: ctf/web/index.md
@@ -172,12 +172,12 @@ nav:
       - WP: ctf/wp/index.md
   - Devops:
       - devops/index.md
-      - 容器: devops/container/index.md
-      - 部署与 CI/CD: devops/cicd/index.md
-      - 工具链: devops/tools/index.md
+      - Docker: devops/container/index.md
+      - CI/CD: devops/cicd/index.md
+      - Tools: devops/tools/index.md
   - Life:
       - life/index.md
-      - 日常: life/daily/index.md
-      - 测试文章: life/daily/test-post.md
-      - 阅读: life/reading/index.md
+      - Daily: life/daily/index.md
+      - Test: life/daily/test-post.md
+      - Books: life/reading/index.md
   - Heatmap: heatmap.md
