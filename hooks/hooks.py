@@ -11,6 +11,7 @@ import os
 import subprocess
 from collections import Counter
 from datetime import date, timedelta
+from pathlib import Path
 
 DOCS_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", "docs")
 CONTRIB_JS_PATH = os.path.join(DOCS_DIR, "javascripts", "contrib-data.js")
@@ -115,6 +116,59 @@ def _write_contrib(entries):
         CONTRIB_JS_PATH,
         "window.CONTRIB_DATA = " + json.dumps(payload, ensure_ascii=False) + ";\n",
     )
+
+
+def _read_title(src_uri):
+    """读取 Markdown 文件首个一级标题，作为文章标题"""
+    path = Path(DOCS_DIR) / src_uri
+    try:
+        for line in path.read_text(encoding="utf-8").splitlines():
+            line = line.strip()
+            if line.startswith("# "):
+                return line[2:].strip()
+    except Exception:
+        pass
+    return Path(src_uri).stem.replace("-", " ").title()
+
+
+def _latest_post():
+    """返回最新一篇文章的 (src_uri, title)，无文章时返回 No"""
+    repo_dir = os.path.dirname(DOCS_DIR)
+    excluded = {"index.md", "friends.md", "heatmap.md"}
+    candidates = []
+    for p in Path(DOCS_DIR).rglob("*.md"):
+        rel = p.relative_to(DOCS_DIR).as_posix()
+        if rel in excluded or rel.endswith("/index.md"):
+            continue
+        ts = 0
+        try:
+            out = subprocess.run(
+                ["git", "log", "-1", "--format=%at", "--", "docs/" + rel],
+                cwd=repo_dir, capture_output=True, text=True, timeout=10,
+            )
+            ts = int(out.stdout.strip()) if out.stdout.strip().isdigit() else 0
+        except Exception:
+            pass
+        candidates.append((ts, rel))
+    if not candidates:
+        return None
+    candidates.sort(key=lambda x: x[0], reverse=True)
+    src_uri = candidates[0][1]
+    return src_uri, _read_title(src_uri)
+
+
+def on_page_markdown(markdown, page, config, files, **kwargs):
+    """在首页替换 [[LATEST_POST]] 占位符为「最新更新」直达链接"""
+    if page.file.src_uri != "index.md":
+        return markdown
+    latest = _latest_post()
+    if latest:
+        src_uri, title = latest
+        url = src_uri[:-3] + "/"  # .md -> /
+        link = f"[News]({url})"
+    else:
+        link = "News"
+    return markdown.replace("[[LATEST_POST]]", link)
 
 
 def on_pre_build(config, **kwargs):

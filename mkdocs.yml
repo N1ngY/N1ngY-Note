@@ -176,5 +176,6 @@ nav:
   - Life:
       - life/index.md
       - 日常: life/daily/index.md
+      - 测试文章: life/daily/test-post.md
       - 阅读: life/reading/index.md
   - Heatmap: heatmap.md

@@ -11,7 +11,7 @@ hide:
 
 这里是 N1ngY 的个人笔记本哦！
 
--   :material-chart-bar:{ .lg .middle }  [ Heatmap](heatmap.md)     :material-link-variant:{ .lg .middle } [ Friends](friends.md)
+-    :material-history:{ .lg .middle } [[LATEST_POST]]    :material-link-variant:{ .lg .middle } [ Friends](friends.md)    :material-chart-bar:{ .lg .middle }  [ Heatmap](heatmap.md)
 
 </div>
 
