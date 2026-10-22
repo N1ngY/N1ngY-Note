@@ -1,11 +1,10 @@
-"""构建期钩子：基于 git 历史自动生成「贡献热力图」数据
+"""构建期钩子
 
-- on_pre_build 时读取当前仓库的 git log，生成 docs/javascripts/contrib-data.js：
-  按「年份 → 月份 → 日期 → 提交次数」聚合，并附带统计信息。
-
-没有 git 仓库时写入空数据，构建不会失败。
+- 基于 git 历史生成「贡献热力图」数据（docs/javascripts/contrib-data.js）。
+- 为 frontmatter 中标注了 `password` 的文章计算密码哈希，供前端访问校验弹窗使用。
 """
 
+import hashlib
 import json
 import os
 import subprocess
@@ -51,6 +50,11 @@ def _safe_write(path, content):
                 f.write(content)
         except OSError:
             print(f"[hooks] 警告：无法写入 {path}，已跳过")
+
+
+def _hash_password(password):
+    """对密码做 SHA-256 哈希"""
+    return hashlib.sha256(str(password).encode("utf-8")).hexdigest()
 
 
 def _streaks(iso_dates):
@@ -158,17 +162,24 @@ def _latest_post():
 
 
 def on_page_markdown(markdown, page, config, files, **kwargs):
-    """在首页替换 [[LATEST_POST]] 占位符为「最新更新」直达链接"""
-    if page.file.src_uri != "index.md":
-        return markdown
-    latest = _latest_post()
-    if latest:
-        src_uri, title = latest
-        url = src_uri[:-3] + "/"  # .md -> /
-        link = f"[News]({url})"
-    else:
-        link = "News"
-    return markdown.replace("[[LATEST_POST]]", link)
+    """首页占位符替换 + 受保护文章密码哈希注入"""
+    if page.file.src_uri == "index.md":
+        latest = _latest_post()
+        if latest:
+            src_uri, title = latest
+            url = src_uri[:-3] + "/"  # .md -> /
+            link = f"[News]({url})"
+        else:
+            link = "News"
+        markdown = markdown.replace("[[LATEST_POST]]", link)
+
+    # 文章 frontmatter 中标注 `password` 时，注入密码哈希供模板渲染到页面
+    meta = getattr(page, "meta", None) or {}
+    password = meta.get("password")
+    if password:
+        page.meta["password_hash"] = _hash_password(password)
+
+    return markdown
 
 
 def on_pre_build(config, **kwargs):

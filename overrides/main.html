@@ -1,0 +1,14 @@
+{#-
+  在受保护文章页注入密码哈希，并在 body 渲染前锁定正文，避免内容闪现。
+-#}
+{% extends "base.html" %}
+
+{% block extrahead %}
+  {{ super() }}
+  {% if page.meta and page.meta.password_hash %}
+    <meta name="page-password" content="{{ page.meta.password_hash }}">
+    <script>
+      document.documentElement.classList.add("md-protected-locked");
+    </script>
+  {% endif %}
+{% endblock %}

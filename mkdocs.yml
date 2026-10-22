@@ -127,6 +127,7 @@ extra_javascript:
   - javascripts/vendor/tex-svg-full.js     # 本地化 MathJax 3（SVG 输出，无字体依赖）
   - javascripts/contrib-data.js   # 由 hooks/hooks.py 在构建时生成
   - javascripts/contrib.js
+  - javascripts/protected.js
 # -------------------------------------------------------------
 # 评论系统（giscus）—— 填入你的仓库信息后自动启用
 # 申请方式：https://giscus.app/zh-CN
