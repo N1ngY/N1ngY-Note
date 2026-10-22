@@ -677,3 +677,58 @@
 [data-md-color-scheme="slate"] .md-typeset table:not([class]) tbody tr:nth-child(even) {
   background: #1f2327;
 }
+
+/* =============================================================
+   友链页面：三列卡片
+   ============================================================= */
+.friends-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  margin: 1rem 0 2rem;
+}
+
+.friend-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 0.4rem;
+  padding: 1.4rem 1rem;
+  background: var(--ak-raised);
+  border: 1px solid var(--ak-line);
+  box-shadow: var(--md-shadow-z1);
+}
+
+.friend-avatar {
+  width: 72px;
+  height: 72px;
+  border-radius: 50%;
+  border: 2px solid var(--ak-amber);
+  object-fit: cover;
+  background: var(--ak-bg);
+}
+
+.friend-card strong {
+  font-size: 1rem;
+}
+
+.friend-card a {
+  color: var(--ak-amber);
+  font-size: 0.8rem;
+  word-break: break-all;
+}
+
+.friend-card p {
+  margin: 0;
+  color: var(--ak-ink-soft);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+/* 移动端降为一列 */
+@media (max-width: 720px) {
+  .friends-grid {
+    grid-template-columns: 1fr;
+  }
+}
